@@ -59,34 +59,63 @@
 }
 
 /* Print styles for PDF export */
+/* TODO: Fix printing - currently shows blank page, need to investigate why .print-container content isn't visible */
 @media print {
+  /* Hide the main page container */
+  .main-page-container {
+    display: none !important;
+  }
+  
+  /* Hide the preview panel header */
+  .bg-muted\/50 {
+    display: none !important;
+  }
+  
+  /* Hide the plain text section specifically */
+  .plain-text-section {
+    display: none !important;
+  }
+  
+  /* Make the print container visible and positioned */
+  .print-container {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 1cm !important;
+    background: white !important;
+    display: block !important;
+    z-index: 9999 !important;
+  }
+  
+  /* Ensure the header content is visible */
+  .syllabus-header {
+    display: flex !important;
+    background: white !important;
+    color: black !important;
+  }
+  
+  .syllabus-header h1 {
+    color: black !important;
+    font-size: 18pt !important;
+    font-weight: bold !important;
+  }
+  
+  .syllabus-header p {
+    color: black !important;
+    font-size: 12pt !important;
+  }
+  
+  /* Reset body for clean printing */
   body {
     font-family: 'Courier New', monospace;
     font-size: 12pt;
     line-height: 1.4;
     color: black;
     background: white;
-  }
-  
-  .print-container {
-    max-width: none;
     margin: 0;
-    padding: 1cm;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-  
-  .no-print {
-    display: none !important;
-  }
-  
-  /* Ensure page breaks work properly */
-  .page-break {
-    page-break-before: always;
-  }
-  
-  /* Avoid breaking inside important sections */
-  .avoid-break {
-    page-break-inside: avoid;
+    padding: 0;
   }
 }

@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun, AlignmentType } from 'docx'
+import { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun } from 'docx'
 import { saveAs } from 'file-saver'
 import type { Syllabus } from './types'
 import { buildFinalText } from './format'
@@ -68,39 +68,90 @@ export async function exportToDocx(syllabus: Syllabus): Promise<void> {
   const text = buildFinalText(syllabus)
   const lines = text.split('\n')
 
+  // Fetch the school logo image
+  let logoImage: ImageRun | undefined
+  try {
+    const response = await fetch('/school-logo.png')
+    const arrayBuffer = await response.arrayBuffer()
+    logoImage = new ImageRun({
+      data: arrayBuffer,
+      transformation: {
+        width: 80,
+        height: 80,
+      },
+    })
+  } catch (error) {
+    console.warn('Could not load school logo for DOCX export:', error)
+  }
+
   const doc = new Document({
     sections: [
       {
-        children: lines.map(line => {
-          // Handle tabs in week-by-week tables
-          if (line.includes('\t')) {
-            const parts = line.split('\t')
+        children: [
+          // Header with school name, logo, and address
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: syllabus.institutionName,
+                font: 'Arial',
+                size: 32, // 16pt
+                bold: true,
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 240 }, // 12pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: syllabus.institutionAddress,
+                font: 'Arial',
+                size: 24, // 12pt
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 240 }, // 12pt after
+          }),
+          // Logo paragraph (if logo was loaded successfully)
+          ...(logoImage ? [
+            new Paragraph({
+              children: [logoImage],
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 360 }, // 18pt after
+            })
+          ] : []),
+          // Add the rest of the content
+          ...lines.map(line => {
+            // Handle tabs in week-by-week tables
+            if (line.includes('\t')) {
+              const parts = line.split('\t')
+              return new Paragraph({
+                children: parts.map((part, index) => [
+                  new TextRun({
+                    text: part,
+                    font: 'Courier New',
+                    size: 22, // 11pt
+                  }),
+                  // Add tab space except for last part
+                  ...(index < parts.length - 1 ? [new TextRun({ text: '\t', font: 'Courier New', size: 22 })] : []),
+                ]).flat(),
+                spacing: { after: 120 }, // 6pt after
+              })
+            }
+
+            // Regular lines
             return new Paragraph({
-              children: parts.map((part, index) => [
+              children: [
                 new TextRun({
-                  text: part,
+                  text: line || ' ', // Preserve empty lines
                   font: 'Courier New',
                   size: 22, // 11pt
                 }),
-                // Add tab space except for last part
-                ...(index < parts.length - 1 ? [new TextRun({ text: '\t', font: 'Courier New', size: 22 })] : []),
-              ]).flat(),
+              ],
               spacing: { after: 120 }, // 6pt after
             })
-          }
-
-          // Regular lines
-          return new Paragraph({
-            children: [
-              new TextRun({
-                text: line || ' ', // Preserve empty lines
-                font: 'Courier New',
-                size: 22, // 11pt
-              }),
-            ],
-            spacing: { after: 120 }, // 6pt after
-          })
-        }),
+          }),
+        ],
         properties: {
           page: {
             margin: {

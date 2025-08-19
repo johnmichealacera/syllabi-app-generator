@@ -10,7 +10,7 @@ export default function HomePage() {
   const { syllabus, importFromJSON, resetToDefaults } = useSyllabusStore()
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col main-page-container">
       {/* Header */}
       <div className="bg-primary text-primary-foreground">
         <div className="px-6 py-4">
