@@ -248,25 +248,14 @@ export function SyllabusForm() {
         <AccordionItem value="footer">
           <AccordionTrigger>Document Information & Signatures</AccordionTrigger>
           <AccordionContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="date-revised">Date Revised *</Label>
-                <Input
-                  id="date-revised"
-                  value={syllabus.dateRevised}
-                  onChange={e => updateField('dateRevised', e.target.value)}
-                  placeholder={formatDate(new Date())}
-                />
-              </div>
-              <div>
-                <Label htmlFor="effectivity">Effectivity *</Label>
-                <Input
-                  id="effectivity"
-                  value={syllabus.effectivity}
-                  onChange={e => updateField('effectivity', e.target.value)}
-                  placeholder="A.Y: 2025-2026 1st Semester"
-                />
-              </div>
+            <div>
+              <Label htmlFor="effectivity">Effectivity *</Label>
+              <Input
+                id="effectivity"
+                value={syllabus.effectivity}
+                onChange={e => updateField('effectivity', e.target.value)}
+                placeholder="A.Y: 2025-2026 1st Semester"
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

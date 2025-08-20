@@ -35,7 +35,7 @@ export type Syllabus = {
   referencesYearFilter: string // e.g., "2021+"
   referencesList: string[]
 
-  dateRevised: string // formatted date string e.g. Aug. 14, 2025
+  dateRevised?: string // optional since it's now dynamic
   effectivity: string
 
   preparedByName: string

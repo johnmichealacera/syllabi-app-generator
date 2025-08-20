@@ -234,7 +234,7 @@ const defaultSyllabus: Syllabus = {
     'Current articles & videos on emerging technologies',
   ],
 
-  dateRevised: 'Aug. 14, 2025',
+
   effectivity: 'A.Y: 2025-2026 1st Semester',
 
   preparedByName: 'JOHN MICHEAL M. ACERA',

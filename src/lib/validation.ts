@@ -47,7 +47,7 @@ export const syllabusSchema = z.object({
   referencesYearFilter: z.string(),
   referencesList: z.array(z.string().min(1)).min(1, 'At least one reference is required'),
 
-  dateRevised: z.string().min(1, 'Date revised is required'),
+
   effectivity: z.string().min(1, 'Effectivity is required'),
 
   preparedByName: z.string().min(1, 'Prepared by name is required'),

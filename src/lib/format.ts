@@ -104,7 +104,11 @@ export function buildFinalText(syllabus: Syllabus): string {
   lines.push(' ')
 
   // Footer info
-  lines.push(`Date Revised: ${syllabus.dateRevised}`)
+  lines.push(`Date Revised: ${new Date().toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  })}`)
   lines.push('')
   lines.push(`Effectivity: ${syllabus.effectivity}`)
   lines.push('')

@@ -1,9 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import type { Syllabus } from '@/lib/types'
 import { buildFinalText } from '@/lib/format'
 import Image from 'next/image'
+import { PrintModal } from './PrintModal'
 
 interface SyllabusPreviewProps {
   syllabus: Syllabus
@@ -11,6 +12,7 @@ interface SyllabusPreviewProps {
 
 export function SyllabusPreview({ syllabus }: SyllabusPreviewProps) {
   const formattedText = buildFinalText(syllabus)
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false)
 
   return (
     <div className="h-full flex flex-col">
@@ -23,7 +25,7 @@ export function SyllabusPreview({ syllabus }: SyllabusPreviewProps) {
             </p>
           </div>
           <button
-            onClick={() => window.print()}
+            onClick={() => setIsPrintModalOpen(true)}
             className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
@@ -68,6 +70,13 @@ export function SyllabusPreview({ syllabus }: SyllabusPreviewProps) {
           </div>
         </div>
       </div>
+      
+      {/* Print Modal */}
+      <PrintModal
+        syllabus={syllabus}
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+      />
     </div>
   )
 }
