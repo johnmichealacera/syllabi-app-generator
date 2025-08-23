@@ -65,9 +65,6 @@ export function importFromJSON(): Promise<Partial<Syllabus>> {
  * Export syllabus as DOCX
  */
 export async function exportToDocx(syllabus: Syllabus): Promise<void> {
-  const text = buildFinalText(syllabus)
-  const lines = text.split('\n')
-
   // Fetch the school logo image
   let logoImage: ImageRun | undefined
   try {
@@ -76,8 +73,8 @@ export async function exportToDocx(syllabus: Syllabus): Promise<void> {
     logoImage = new ImageRun({
       data: arrayBuffer,
       transformation: {
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
       },
     })
   } catch (error) {
@@ -120,40 +117,541 @@ export async function exportToDocx(syllabus: Syllabus): Promise<void> {
               spacing: { after: 360 }, // 18pt after
             })
           ] : []),
-          // Add the rest of the content
-          ...lines.map(line => {
-            // Handle tabs in week-by-week tables
-            if (line.includes('\t')) {
-              const parts = line.split('\t')
-              return new Paragraph({
-                children: parts.map((part, index) => [
-                  new TextRun({
-                    text: part,
-                    font: 'Courier New',
-                    size: 22, // 11pt
-                  }),
-                  // Add tab space except for last part
-                  ...(index < parts.length - 1 ? [new TextRun({ text: '\t', font: 'Courier New', size: 22 })] : []),
-                ]).flat(),
-                spacing: { after: 120 }, // 6pt after
-              })
-            }
 
-            // Regular lines
-            return new Paragraph({
+          // Course Information Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Course Code: ${syllabus.courseCode}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Course Credit: ${syllabus.courseCredit}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Contact Hours: ${syllabus.contactHours}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Prerequisite: ${syllabus.prerequisite}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Course Title: ${syllabus.courseTitle}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Vision Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'VISION',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: syllabus.visionText,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Mission Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'MISSION',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'To provide academic and operational excellence vis-a-vis:',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          // Mission bullets
+          ...syllabus.missionBullets.map(bullet => 
+            new Paragraph({
               children: [
                 new TextRun({
-                  text: line || ' ', // Preserve empty lines
-                  font: 'Courier New',
+                  text: `• ${bullet}`,
+                  font: 'Arial',
                   size: 22, // 11pt
                 }),
               ],
-              spacing: { after: 120 }, // 6pt after
+              spacing: { after: 60 }, // 3pt after
             })
+          ),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: '',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+
+          // Objectives Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'OBJECTIVES',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'BGFC shall:',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          // Objectives bullets
+          ...syllabus.institutionObjectives.map(objective => 
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `• ${objective}`,
+                  font: 'Arial',
+                  size: 22, // 11pt
+                }),
+              ],
+              spacing: { after: 60 }, // 3pt after
+            })
+          ),
+
+          // Separator line
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: '________________________________________',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Course Description Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'Course Description',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: syllabus.courseDescription,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Separator line
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: '________________________________________',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Learning Outcomes Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'Course Learning Outcomes',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'By the end of the semester, students will be able to:',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          // Learning outcomes numbered list
+          ...syllabus.learningOutcomes.map((outcome, index) => 
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `${index + 1}. ${outcome}`,
+                  font: 'Arial',
+                  size: 22, // 11pt
+                }),
+              ],
+              spacing: { after: 60 }, // 3pt after
+            })
+          ),
+
+          // Separator line
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: '________________________________________',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Week-by-Week Outline Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'Week-by-Week Outline',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Render each term block
+          ...syllabus.terms.flatMap(term => [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: term.name,
+                  font: 'Arial',
+                  size: 24, // 12pt
+                  bold: true,
+                }),
+              ],
+              spacing: { after: 120 }, // 6pt after
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: 'Week\tTopics\tIntended Learning Outcomes\tActivities / Assessment',
+                  font: 'Arial',
+                  size: 22, // 11pt
+                  bold: true,
+                }),
+              ],
+              spacing: { after: 120 }, // 6pt after
+            }),
+            // Term rows
+            ...term.rows.map(row => 
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${row.week}\t${row.topics}\t${row.outcomes}\t${row.activities}`,
+                    font: 'Arial',
+                    size: 22, // 11pt
+                  }),
+                ],
+                spacing: { after: 60 }, // 3pt after
+              })
+            ),
+            // Separator after each term
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: '________________________________________',
+                  font: 'Arial',
+                  size: 22, // 11pt
+                }),
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 240 }, // 12pt after
+            }),
+          ]),
+
+          // Teaching Activities Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'Teaching & Learning Activities',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          ...syllabus.teachingActivities.map(activity => 
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `• ${activity}`,
+                  font: 'Arial',
+                  size: 22, // 11pt
+                }),
+              ],
+              spacing: { after: 60 }, // 3pt after
+            })
+          ),
+
+          // Separator line
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: '________________________________________',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Assessment Breakdown Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'Assessment Breakdown',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          ...syllabus.assessmentBreakdown.map(assessment => 
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `• ${assessment}`,
+                  font: 'Arial',
+                  size: 22, // 11pt
+                }),
+              ],
+              spacing: { after: 60 }, // 3pt after
+            })
+          ),
+
+          // Separator line
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: '________________________________________',
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // References Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: 'References',
+                font: 'Arial',
+                size: 24, // 12pt
+                bold: true,
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          ...syllabus.referencesList.map(reference => 
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `• ${reference}`,
+                  font: 'Arial',
+                  size: 22, // 11pt
+                }),
+              ],
+              spacing: { after: 60 }, // 3pt after
+            })
+          ),
+
+          // Document Info
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Date Revised: ${new Date().toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Effectivity: ${syllabus.effectivity}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 240 }, // 12pt after
+          }),
+
+          // Signatures Section
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Prepared by: ${syllabus.preparedByName}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 60 }, // 3pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `\t\t${syllabus.preparedByTitle}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Reviewed by: ${syllabus.reviewedByName}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 60 }, // 3pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `\t\t${syllabus.reviewedByTitle}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Noted by:      ${syllabus.notedByName}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 60 }, // 3pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `\t            ${syllabus.notedByTitle}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Approved by: ${syllabus.approvedByName}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 60 }, // 3pt after
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `\t\t${syllabus.approvedByTitle}`,
+                font: 'Arial',
+                size: 22, // 11pt
+              }),
+            ],
+            spacing: { after: 120 }, // 6pt after
           }),
         ],
         properties: {
           page: {
+            size: {
+              width: 15840, // 11 inches in twips
+              height: 12240, // 8.5 inches in twips (landscape)
+            },
             margin: {
               top: 720, // 0.5 inch
               right: 720,

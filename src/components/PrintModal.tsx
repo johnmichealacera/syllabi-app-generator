@@ -56,27 +56,27 @@ export function PrintModal({ syllabus, isOpen, onClose }: PrintModalProps) {
 
           {/* Syllabus Content */}
           <div className="p-6 overflow-auto max-h-[calc(90vh-80px)] print-content">
-            {/* Header with Logo */}
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center mb-4">
+            {/* Header with Logo - Optimized for Landscape */}
+            <div className="text-center mb-6">
+              <div className="flex items-center justify-center mb-3">
                 <Image
                   src="/school-logo.png"
                   alt="School Logo"
-                  width={80}
-                  height={80}
+                  width={70}
+                  height={70}
                   className="object-contain"
                 />
               </div>
-              <h1 className="text-3xl font-bold mb-2">
+              <h1 className="text-2xl font-bold mb-1">
                 {syllabus.institutionName}
               </h1>
-              <p className="text-lg text-gray-600">
+              <p className="text-base text-gray-600">
                 {syllabus.institutionAddress}
               </p>
             </div>
 
-            {/* Syllabus Content */}
-            <div className="space-y-6">
+            {/* Syllabus Content - Optimized for Landscape */}
+            <div className="space-y-4">
               {/* Course Information */}
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div><strong>Course Code:</strong> {syllabus.courseCode}</div>
@@ -88,15 +88,15 @@ export function PrintModal({ syllabus, isOpen, onClose }: PrintModalProps) {
 
               {/* Vision */}
               <div>
-                <h2 className="text-xl font-bold mb-2">VISION</h2>
-                <p>{syllabus.visionText}</p>
+                <h2 className="text-lg font-bold mb-1">VISION</h2>
+                <p className="text-sm">{syllabus.visionText}</p>
               </div>
 
               {/* Mission */}
               <div>
-                <h2 className="text-xl font-bold mb-2">MISSION</h2>
-                <p>To provide academic and operational excellence vis-a-vis:</p>
-                <ul className="list-disc list-inside mt-2 space-y-1">
+                <h2 className="text-lg font-bold mb-1">MISSION</h2>
+                <p className="text-sm">To provide academic and operational excellence vis-a-vis:</p>
+                <ul className="list-disc list-inside mt-1 space-y-0.5 text-sm">
                   {syllabus.missionBullets.map((bullet, index) => (
                     <li key={index}>{bullet}</li>
                   ))}
@@ -105,9 +105,9 @@ export function PrintModal({ syllabus, isOpen, onClose }: PrintModalProps) {
 
               {/* Objectives */}
               <div>
-                <h2 className="text-xl font-bold mb-2">OBJECTIVES</h2>
-                <p>BGFC shall:</p>
-                <ul className="list-disc list-inside mt-2 space-y-1">
+                <h2 className="text-lg font-bold mb-1">OBJECTIVES</h2>
+                <p className="text-sm">BGFC shall:</p>
+                <ul className="list-disc list-inside mt-1 space-y-0.5 text-sm">
                   {syllabus.institutionObjectives.map((objective, index) => (
                     <li key={index}>{objective}</li>
                   ))}
@@ -118,17 +118,17 @@ export function PrintModal({ syllabus, isOpen, onClose }: PrintModalProps) {
 
               {/* Course Description */}
               <div>
-                <h2 className="text-xl font-bold mb-2">Course Description</h2>
-                <p>{syllabus.courseDescription}</p>
+                <h2 className="text-lg font-bold mb-1">Course Description</h2>
+                <p className="text-sm">{syllabus.courseDescription}</p>
               </div>
 
               <hr className="border-t-2 border-gray-300" />
 
               {/* Learning Outcomes */}
               <div>
-                <h2 className="text-xl font-bold mb-2">Course Learning Outcomes</h2>
-                <p>By the end of the semester, students will be able to:</p>
-                <ol className="list-decimal list-inside mt-2 space-y-1">
+                <h2 className="text-lg font-bold mb-1">Course Learning Outcomes</h2>
+                <p className="text-sm">By the end of the semester, students will be able to:</p>
+                <ol className="list-decimal list-inside mt-1 space-y-0.5 text-sm">
                   {syllabus.learningOutcomes.map((outcome, index) => (
                     <li key={index}>{outcome}</li>
                   ))}
@@ -139,7 +139,7 @@ export function PrintModal({ syllabus, isOpen, onClose }: PrintModalProps) {
 
               {/* Week-by-Week Outline */}
               <div>
-                <h2 className="text-xl font-bold mb-4">Week-by-Week Outline</h2>
+                <h2 className="text-lg font-bold mb-2">Week-by-Week Outline</h2>
                 {syllabus.terms.map((term, termIndex) => (
                   <div key={termIndex} className="mb-6">
                     <h3 className="text-lg font-semibold mb-3">{term.name}</h3>
@@ -173,8 +173,8 @@ export function PrintModal({ syllabus, isOpen, onClose }: PrintModalProps) {
 
               {/* Teaching Activities */}
               <div>
-                <h2 className="text-xl font-bold mb-2">Teaching & Learning Activities</h2>
-                <ul className="list-disc list-inside space-y-1">
+                <h2 className="text-lg font-bold mb-1">Teaching & Learning Activities</h2>
+                <ul className="list-disc list-inside space-y-0.5 text-sm">
                   {syllabus.teachingActivities.map((activity, index) => (
                     <li key={index}>{activity}</li>
                   ))}
@@ -185,8 +185,8 @@ export function PrintModal({ syllabus, isOpen, onClose }: PrintModalProps) {
 
               {/* Assessment Breakdown */}
               <div>
-                <h2 className="text-xl font-bold mb-2">Assessment Breakdown</h2>
-                <ul className="list-disc list-inside space-y-1">
+                <h2 className="text-lg font-bold mb-1">Assessment Breakdown</h2>
+                <ul className="list-disc list-inside space-y-0.5 text-sm">
                   {syllabus.assessmentBreakdown.map((assessment, index) => (
                     <li key={index}>{assessment}</li>
                   ))}
@@ -197,8 +197,8 @@ export function PrintModal({ syllabus, isOpen, onClose }: PrintModalProps) {
 
               {/* References */}
               <div>
-                <h2 className="text-xl font-bold mb-2">References</h2>
-                <ul className="list-disc list-inside space-y-1">
+                <h2 className="text-lg font-bold mb-1">References</h2>
+                <ul className="list-disc list-inside space-y-0.5 text-sm">
                   {syllabus.referencesList.map((reference, index) => (
                     <li key={index}>{reference}</li>
                   ))}
